@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Listing Genres Movies</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Movie</th>
+      <th>Genre</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @genres_movies.each do |genres_movie| %>
+      <tr>
+        <td><%= genres_movie.movie_id %></td>
+        <td><%= genres_movie.genre_id %></td>
+        <td><%= link_to 'Show', genres_movie %></td>
+        <td><%= link_to 'Edit', edit_genres_movie_path(genres_movie) %></td>
+        <td><%= link_to 'Destroy', genres_movie, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Genres movie', new_genres_movie_path %>
