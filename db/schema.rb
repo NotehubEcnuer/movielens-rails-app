@@ -11,35 +11,27 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150404222617) do
+ActiveRecord::Schema.define(version: 20180917070817) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "genres", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string "name", limit: 255
   end
 
   create_table "genres_movies", force: :cascade do |t|
-    t.integer  "movie_id"
-    t.integer  "genre_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer "movie_id"
+    t.integer "genre_id"
   end
 
   create_table "movies", force: :cascade do |t|
-    t.string   "title"
-    t.date     "release_date"
-    t.datetime "created_at",   null: false
-    t.datetime "updated_at",   null: false
+    t.string "title",        limit: 255
+    t.date   "release_date"
   end
 
   create_table "occupations", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.string "name", limit: 255
   end
 
   create_table "ratings", force: :cascade do |t|
@@ -47,17 +39,15 @@ ActiveRecord::Schema.define(version: 20150404222617) do
     t.integer  "movie_id"
     t.integer  "rating"
     t.datetime "rated_at"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
+  add_index "ratings", ["user_id", "movie_id"], name: "index_ratings_on_user_id_and_movie_id", unique: true, using: :btree
+
   create_table "users", force: :cascade do |t|
-    t.integer  "age"
-    t.string   "gender"
-    t.integer  "occupation_id"
-    t.string   "zip_code"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.integer "age"
+    t.string  "gender",        limit: 1
+    t.integer "occupation_id"
+    t.string  "zip_code",      limit: 255
   end
 
 end
