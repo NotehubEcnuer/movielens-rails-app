@@ -28,6 +28,31 @@ class Movie < ActiveRecord::Base
     intersection.to_f / union.to_f
   end
 
+  def pearson_sim(other_movie)
+    other_user_ratings = other_movie.ratings.map { |r| [r.user_id, r.rating] }.to_h
+    user_ratings       = self.ratings.map { |r| [r.user_id, r.rating] }.to_h
+    
+    # 有共同评价的用户
+    union_user_ids = other_user_ratings.keys & user_ratings.keys
+    n = union_user_ids.count
+    return 0 if n == 0
+
+    u = other_user_ratings.values_at(*union_user_ids)
+    v = user_ratings.values_at(*union_user_ids)
+
+    sum_u = u.sum
+    sum_v = v.sum 
+
+    sum_u_sq = u.map { |x| x*x }.sum 
+    sum_v_sq = v.map { |x| x*x }.sum
+
+    prod_sum = u.zip(v).map { |x, y| x*y }.sum
+    num = prod_sum - ((sum_u * sum_v) / n.to_f)
+    den = Math.sqrt((sum_u_sq - (sum_u * sum_u) / n.to_f) * (sum_v_sq - (sum_v * sum_v) / n.to_f))
+    return 0 if den == 0
+    [num / den, 1].min
+  end
+
   def cosine_sim(other_movie)
     other_user_ratings = other_movie.ratings.map { |r| [r.user_id, r.rating] }.to_h
     user_ratings       = self.ratings.map { |r| [r.user_id, r.rating] }.to_h
@@ -43,7 +68,7 @@ class Movie < ActiveRecord::Base
 
     magnitude_u = Math.sqrt(u.map { |x| x*x }.sum)
     magnitude_v = Math.sqrt(v.map { |x| x*x }.sum)
-    
+
     cosine_similarity = dot_product.to_f / (magnitude_v * magnitude_u)
   end
 
