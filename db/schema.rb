@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180917070817) do
+ActiveRecord::Schema.define(version: 20180918091059) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -25,9 +25,18 @@ ActiveRecord::Schema.define(version: 20180917070817) do
     t.integer "genre_id"
   end
 
+  create_table "item_item_matrix", id: false, force: :cascade do |t|
+    t.integer "u_id"
+    t.integer "v_id"
+    t.float   "sim_score", default: 0.0
+  end
+
+  add_index "item_item_matrix", ["u_id", "v_id"], name: "index_item_item_matrix_on_u_id_and_v_id", unique: true, using: :btree
+
   create_table "movies", force: :cascade do |t|
-    t.string "title",        limit: 255
-    t.date   "release_date"
+    t.string  "title",         limit: 255
+    t.date    "release_date"
+    t.integer "like_user_ids",             default: [], array: true
   end
 
   create_table "occupations", force: :cascade do |t|
