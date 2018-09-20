@@ -13,6 +13,17 @@ class Movie < ActiveRecord::Base
   has_many :genres_movies
   has_many :genres, through: :genres_movies
 
+  def recommend_by_matrix(limit: 10)
+    Movie.find_by_sql(<<~SQL)
+      SELECT m.*, matrix.sim_score
+        FROM item_item_matrix AS matrix
+             INNER JOIN movies AS m ON m.id = matrix.v_id
+       WHERE matrix.u_id = #{self.id}
+    ORDER BY matrix.sim_score DESC
+       LIMIT #{limit}
+    SQL
+  end
+
   def recommend_by_sql(limit: 10)
     Movie.find_by_sql(<<~SQL)
         SELECT array_length(m.like_user_ids & movies.like_user_ids, 1) / array_length(m.like_user_ids | movies.like_user_ids, 1)::float AS score,

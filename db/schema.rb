@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180919062850) do
+ActiveRecord::Schema.define(version: 20180920081459) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 20180919062850) do
     t.float   "sim_score", default: 0.0
   end
 
+  add_index "item_item_matrix", ["u_id", "sim_score", "v_id"], name: "index_item_item_matrix_on_u_id_and_sim_score_and_v_id", using: :btree
   add_index "item_item_matrix", ["u_id", "v_id"], name: "index_item_item_matrix_on_u_id_and_v_id", unique: true, using: :btree
 
   create_table "movies", force: :cascade do |t|
