@@ -13,6 +13,18 @@ class Movie < ActiveRecord::Base
   has_many :genres_movies
   has_many :genres, through: :genres_movies
 
+  def recommend_by_sql(limit: 10)
+    Movie.find_by_sql(<<~SQL)
+        SELECT array_length(m.like_user_ids & movies.like_user_ids, 1) / array_length(m.like_user_ids | movies.like_user_ids, 1)::float AS score,
+               m.* 
+          FROM movies 
+               INNER JOIN movies AS m ON m.id != #{self.id} 
+         WHERE movies.id = #{self.id}  
+      ORDER BY 1 DESC 
+         LIMIT #{limit}
+    SQL
+  end
+
   def jaccard_sim(other_movie)
     # 假设评分大于等于3的为喜欢
     other_user_ids = other_movie.ratings.where("rating >= 3").pluck(:user_id)

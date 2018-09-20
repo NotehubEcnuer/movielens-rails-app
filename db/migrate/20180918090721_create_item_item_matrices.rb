@@ -8,3 +8,4 @@ class CreateItemItemMatrices < ActiveRecord::Migration
     add_index :item_item_matrix, [:u_id, :v_id], :unique => true
   end
 end
+

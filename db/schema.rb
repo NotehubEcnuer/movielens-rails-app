@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180918091059) do
+ActiveRecord::Schema.define(version: 20180919062850) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "intarray"
 
   create_table "genres", force: :cascade do |t|
     t.string "name", limit: 255
@@ -38,6 +39,9 @@ ActiveRecord::Schema.define(version: 20180918091059) do
     t.date    "release_date"
     t.integer "like_user_ids",             default: [], array: true
   end
+
+  add_index "movies", ["like_user_ids"], name: "like_user_ids_idx", using: :gist
+  add_index "movies", ["like_user_ids"], name: "like_user_ids_idx_2", using: :gin
 
   create_table "occupations", force: :cascade do |t|
     t.string "name", limit: 255
